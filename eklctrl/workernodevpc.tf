@@ -91,50 +91,16 @@ resource "aws_network_acl_association" "worker_nacl_association_b" {
 }
 
 
-# Create VPC peering connection
+# Define VPC peering connection
 resource "aws_vpc_peering_connection" "vpc_peering" {
-  vpc_id        = aws_vpc.worker_vpc.id
-  peer_vpc_id   = aws_vpc.eks_vpc.id
-  peer_region   = "us-east-1"
+  peer_vpc_id   = aws_vpc.worker_vpc.id        # Worker node VPC ID
+  vpc_id        = aws_vpc.eks_vpc.id       # Control plane VPC ID
   auto_accept   = true
 }
 
-# Create route table for control plane VPC
-resource "aws_route_table" "control_route_table" {
-  vpc_id = aws_vpc.eks_vpc.id
-  tags = {
-    Name = "control-route-table"
-  }
-}
-
-# Create route table for worker node VPC
-resource "aws_route_table" "worker_route_table01" {
-  vpc_id = aws_vpc.worker_vpc.id
-  tags = {
-    Name = "worker-route-table"
-  }
-}
-
-# Create route between control and worker VPCs
-resource "aws_route" "control_to_worker_route" {
-  route_table_id         = aws_route_table.control_route_table.id
-  destination_cidr_block = aws_vpc.worker_vpc.cidr_block
+# Accept VPC peering connection from the worker VPC side
+resource "aws_vpc_peering_connection_accepter" "vpc_peering_accepter" {
+  provider      = aws.us-east-1
   vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
-}
-
-resource "aws_route" "worker_to_control_route" {
-  route_table_id         = aws_route_table.worker_route_table01.id
-  destination_cidr_block = aws_vpc.eks_vpc.cidr_block
-  vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
-}
-
-# Create subnet associations with route tables
-resource "aws_route_table_association" "control_route_table_association" {
-  subnet_id      = aws_subnet.control_subnet.id
-  route_table_id = aws_route_table.control_route_table.id
-}
-
-resource "aws_route_table_association" "worker_route_table_association" {
-  subnet_id      = aws_subnet.worker_subnet.id
-  route_table_id = aws_route_table.worker_route_table01.id
+  auto_accept   = true
 }
