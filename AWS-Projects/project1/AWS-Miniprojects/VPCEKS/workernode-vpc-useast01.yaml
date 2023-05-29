@@ -1,8 +1,3 @@
-# Define the AWS provider
-provider "aws" {
-  region = "us-east-1"  # Replace with your desired region
-}
-
 # Create the worker node VPC
 resource "aws_vpc" "worker-node-useast01" {
   cidr_block = "10.20.0.0/16"  # Replace with your desired CIDR block
