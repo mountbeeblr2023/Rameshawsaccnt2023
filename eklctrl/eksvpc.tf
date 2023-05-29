@@ -9,7 +9,7 @@ resource "aws_vpc" "eks_vpc" {
 # Create subnets
 resource "aws_subnet" "eks_subnet_a" {
   vpc_id                  = aws_vpc.eks_vpc.id
-  cidr_block              = "10.16.0.0/20"
+  cidr_block              = "10.16.0.0/28"
   availability_zone       = "us-east-1a"
   tags = {
     Name = "eks-subnet-a"
@@ -18,7 +18,7 @@ resource "aws_subnet" "eks_subnet_a" {
 
 resource "aws_subnet" "eks_subnet_b" {
   vpc_id                  = aws_vpc.eks_vpc.id
-  cidr_block              = "10.16.16.0/20"
+  cidr_block              = "10.16.0.16/28"
   availability_zone       = "us-east-1b"
   tags = {
     Name = "eks-subnet-b"

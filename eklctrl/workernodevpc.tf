@@ -1,6 +1,6 @@
 # Create worker node VPC
 resource "aws_vpc" "worker_vpc" {
-  cidr_block = "10.17.0.0/20"
+  cidr_block = "10.17.0.0/24"
   tags = {
     Name = "worker-vpc"
   }
@@ -9,7 +9,7 @@ resource "aws_vpc" "worker_vpc" {
 # Create worker node subnets
 resource "aws_subnet" "worker_subnet_a" {
   vpc_id                  = aws_vpc.worker_vpc.id
-  cidr_block              = "10.17.0.0/24"
+  cidr_block              = "10.17.0.0/28"
   availability_zone       = "us-east-1a"
   tags = {
     Name = "worker-subnet-a"
@@ -18,7 +18,7 @@ resource "aws_subnet" "worker_subnet_a" {
 
 resource "aws_subnet" "worker_subnet_b" {
   vpc_id                  = aws_vpc.worker_vpc.id
-  cidr_block              = "10.17.16.0/24"
+  cidr_block              = "10.17.0.16/28"
   availability_zone       = "us-east-1b"
   tags = {
     Name = "worker-subnet-b"
