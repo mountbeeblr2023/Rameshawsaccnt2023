@@ -1,7 +1,3 @@
-# Configure the AWS Provider
-provider "aws" {
-  region = "us-east-1"
-}
 
 # Define VPC peering connection
 resource "aws_vpc_peering_connection" "vpc_peering" {
