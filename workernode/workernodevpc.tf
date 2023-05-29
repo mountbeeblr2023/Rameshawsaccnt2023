@@ -108,7 +108,7 @@ resource "aws_route_table" "control_route_table" {
 }
 
 # Create route table for worker node VPC
-resource "aws_route_table" "worker_route_table" {
+resource "aws_route_table" "worker_route_table01" {
   vpc_id = aws_vpc.worker_vpc.id
   tags = {
     Name = "worker-route-table"
@@ -123,7 +123,7 @@ resource "aws_route" "control_to_worker_route" {
 }
 
 resource "aws_route" "worker_to_control_route" {
-  route_table_id         = aws_route_table.worker_route_table.id
+  route_table_id         = aws_route_table.worker_route_table01.id
   destination_cidr_block = aws_vpc.eks_vpc.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
 }
@@ -136,5 +136,5 @@ resource "aws_route_table_association" "control_route_table_association" {
 
 resource "aws_route_table_association" "worker_route_table_association" {
   subnet_id      = aws_subnet.worker_subnet.id
-  route_table_id = aws_route_table.worker_route_table.id
+  route_table_id = aws_route_table.worker_route_table01.id
 }
