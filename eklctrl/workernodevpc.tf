@@ -69,6 +69,20 @@ resource "aws_route_table" "worker_route_table" {
   }
 }
 
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
+# Configure the AWS Provider
+provider "aws" {
+  region = "us-east-1"
+}
+
 # Create subnet associations with route table and network ACL
 resource "aws_route_table_association" "worker_route_table_association_a" {
   subnet_id      = aws_subnet.worker_subnet_a.id
