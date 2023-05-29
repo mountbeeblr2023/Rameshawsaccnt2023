@@ -1,0 +1,68 @@
+# Define the AWS provider
+provider "aws" {
+  region = "us-east-1"  # Replace with your desired region
+}
+
+# Create the EKS Cluster VPC
+resource "aws_vpc" "eks-vpc-useast01" {
+  cidr_block = "10.16.0.0/16"  # Replace with your desired CIDR block
+}
+
+# Create the EKS subnets
+resource "aws_subnet" "eks-sub-1a" {
+  vpc_id                  = aws_vpc.eks-vpc-useast01.id
+  cidr_block              = "10.16.0.0/20"  # Replace with your desired CIDR block for subnet1
+  availability_zone       = "us-east-1a"   # Replace with your desired availability zone
+}
+
+resource "aws_subnet" "eks-sub-1c" {
+  vpc_id                  = aws_vpc.eks-vpc-useast01.id
+  cidr_block              = "10.16.16.0/24"  # Replace with your desired CIDR block for subnet2
+  availability_zone       = "us-east-1b"   # Replace with your desired availability zone
+}
+
+resource "aws_subnet" "eks-sub-1c" {
+  vpc_id                  = aws_vpc.eks-vpc-useast01.id
+  cidr_block              = "10.16.32.0/24"  # Replace with your desired CIDR block for subnet3
+  availability_zone       = "us-east-1c"   # Replace with your desired availability zone
+}
+
+# Create a private route table for VPC 
+resource "aws_route_table" "private_route_table_eks-vpc-useast01 {
+  vpc_id = data.aws_vpc.eks-vpc-useast01.id
+
+  tags = {
+    Name = "PrivateRouteTable_eks-vpc-useast01"
+  }
+}
+
+# Associate subnets with the route table
+resource "aws_route_table_association" "subnet_association_01" {
+  subnet_id      = aws_subnet.eks-sub-1a.id  # Replace with your subnet ID
+  route_table_id = aws_route_table.private_route_table_eks-vpc-useast01.id
+}
+
+resource "aws_route_table_association" "subnet_association_02" {
+  subnet_id      = aws_subnet.eks-sub-1b.id  # Replace with your subnet ID
+  route_table_id = aws_route_table.private_route_table_eks-vpc-useast01.id
+}
+
+resource "aws_route_table_association" "subnet_association_03" {
+  subnet_id      = aws_subnet.eks-sub-1c.id  # Replace with your subnet ID
+  route_table_id = aws_route_table.private_route_table_eks-vpc-useast01.id
+}
+
+# Associate subnets with the EKS control plane subnet network ACL
+resource "aws_network_acl_association" "Nacl_association_01" {
+  subnet_id      = aws_subnet.eks-sub-1a.id  # Replace with your subnet ID
+  network_acl_id = aws_network_acl.eks_control_plane_nacl01.id
+}
+
+resource "aws_network_acl_association" "Nacl_association_02" {
+  subnet_id      = aws_subnet.eks-sub-1b.id  # Replace with your subnet ID
+  network_acl_id = aws_network_acl.eks_control_plane_nacl01.id
+}
+resource "aws_network_acl_association" "Nacl_association_02" {
+  subnet_id      = aws_subnet.eks-sub-1c.id  # Replace with your subnet ID
+  network_acl_id = aws_network_acl.eks_control_plane_nacl01.id
+}
