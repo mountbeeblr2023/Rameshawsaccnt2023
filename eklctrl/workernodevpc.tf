@@ -91,4 +91,3 @@ resource "aws_network_acl_association" "worker_nacl_association_b" {
 }
 
 
-
