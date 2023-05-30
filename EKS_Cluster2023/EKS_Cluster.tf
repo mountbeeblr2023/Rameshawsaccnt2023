@@ -204,51 +204,35 @@ resource "aws_route" "rt_vpc2_peering" {
   vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
 }
 
-####EKS Cluster VPC Output###
-
-output "EKS_subnet_ids" {
-  value = [aws_subnet.eks_subnet_a.id, aws_subnet.eks_subnet_b.id]
+# Define local variables to capture EKS VPC component IDs
+locals {
+  vpc_id            = aws_vpc.eks_vpc.id
+  subnet_id         = [aws_subnet.eks_subnet_a[0].id,aws_subnet.eks_subnet_b[1].id]
+  security_group_id = aws_security_group.eks_cluster_sg.id
+  nacl_id           = aws_network_acl.eks_nacl.id
 }
 
-output "EKS_vpc_id" {
-  value = aws_vpc.eks_vpc.id
-}
 
-output "EKS_security_group_ids" {
-  value = [aws_security_group.eks_cluster_sg.id]
-}
-
-####WorkerNode VPC Output###
-
-output "workernode_subnet_ids" {
-  value = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
-}
-
-output "workernode_vpc_id" {
-  value = aws_vpc.worker_vpc.id
-}
-
-output "workernode_security_group_ids" {
-  value = [aws_security_group.worker-security-group.id]
-}
-
-# Retrieve Cluster VPC component values using outputs
-
+# Retrieve VPC component values using locals
 data "aws_vpc" "existing_vpc" {
-  id = output.EKS_vpc_id
+  id = local.vpc_id
 }
 
 data "aws_subnet" "existing_subnet" {
-  id = output.EKS_subnet_ids
+  id = local.subnet_id
 }
 
 data "aws_security_group" "existing_security_group" {
-  id = output.EKS_security_group_ids
+  id = local.security_group_id
+}
+
+data "aws_network_acl" "existing_nacl" {
+  id = local.nacl_id
 }
 
 # Create EKS cluster
-resource "aws_eks_cluster" "test_eks_cluster" {
-  name     = "test_eks_cluster"
+resource "aws_eks_cluster" "eks_cluster" {
+  name     = "my-eks-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
@@ -258,9 +242,10 @@ resource "aws_eks_cluster" "test_eks_cluster" {
     endpoint_public_access  = true
   }
 }
+
 # Create EKS cluster IAM role and attach necessary policies
-resource "aws_iam_role" "test_eks_cluster_role" {
-  name = "test_eks_cluster_role"
+resource "aws_iam_role" "eks_cluster_role" {
+  name = "my-eks-cluster-role"
 
   assume_role_policy = <<EOF
 {
@@ -278,22 +263,17 @@ resource "aws_iam_role" "test_eks_cluster_role" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "test_eks_cluster_policy" {
-  role       = aws_iam_role.test_eks_cluster_role.name
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
+  role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "test_eks_cluster_worker_policy" {
-  role       = aws_iam_role.test_eks_cluster_role.name
+resource "aws_iam_role_policy_attachment" "eks_cluster_worker_policy" {
+  role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "test_eks_cluster_cni_policy" {
-  role       = aws_iam_role.test_eks_cluster_role.name
+resource "aws_iam_role_policy_attachment" "eks_cluster_cni_policy" {
+  role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSCNIPolicy"
 }
-
-
-
-
-
