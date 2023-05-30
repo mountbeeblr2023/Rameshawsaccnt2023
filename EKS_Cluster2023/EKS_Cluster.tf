@@ -59,6 +59,14 @@ resource "aws_network_acl" "eks_nacl" {
   tags = {
     Name = "eks-nacl"
   }
+  ingress {
+    rule_number = 100
+    protocol    = "-1"  # -1 indicates all protocols
+    from_port   = 0
+    to_port     = 0
+    cidr_block  = "0.0.0.0/0"
+    action      = "allow"
+  }
 }
 
 # Create route table for subnets
@@ -166,15 +174,10 @@ resource "aws_network_acl" "worker_nacl" {
   ingress {
     rule_number = 100
     protocol    = "-1"  # -1 indicates all protocols
-    rule_action = "allow"
+    from_port   = 0
+    to_port     = 0
     cidr_block  = "0.0.0.0/0"
-  }
-
-  egress {
-    rule_number = 100
-    protocol    = "-1"  # -1 indicates all protocols
-    rule_action = "allow"
-    cidr_block  = "0.0.0.0/0"
+    action      = "allow"
   }
 }
 
