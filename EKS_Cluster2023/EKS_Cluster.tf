@@ -246,20 +246,6 @@ data "aws_security_group" "existing_security_group" {
   id = output.EKS_security_group_ids
 }
 
-# Retrieve workernode VPC component values using outputs
-
-data "aws_vpc" "existing_vpc" {
-  id = output.workernode_vpc_id
-}
-
-data "aws_subnet" "existing_subnet" {
-  id = output.workernode_subnet_ids
-}
-
-data "aws_security_group" "existing_security_group" {
-  id = output.workernode_security_group_ids
-}
-
 # Create EKS cluster
 resource "aws_eks_cluster" "test_eks_cluster" {
   name     = "test_eks_cluster"
