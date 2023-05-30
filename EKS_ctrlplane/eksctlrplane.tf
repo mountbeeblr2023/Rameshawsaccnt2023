@@ -16,3 +16,6 @@ module "eks_vpc" {
   source = "../EKS_VPC/"  # Replace with the path to your VPC module folder
   # Additional input variables required by your VPC module
 }
+output "eksctrlplane_deatils" {
+  value = [aws_eks_cluster.eks_ctrlplane01.name]
+}
