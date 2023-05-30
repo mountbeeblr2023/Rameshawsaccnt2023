@@ -277,10 +277,9 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_cni_policy" {
 
 # Define local variables to capture workernode VPC component IDs
 locals {
-  vpc_id            = aws_vpc.eks_vpc.id
+  vpc_id            = aws_vpc.worker_vpc.id
   subnet_ids        = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
   security_group_id = aws_security_group.worker-security-group.id
-  nacl_id           = aws_network_acl.eks_nacl.id
 }
 # Retrieve workernode VPC component values using locals
 data "aws_vpc" "worker_existing_vpc" {
