@@ -207,7 +207,7 @@ resource "aws_route" "rt_vpc2_peering" {
 # Define local variables to capture EKS VPC component IDs
 locals {
   vpc_id            = aws_vpc.eks_vpc.id
-  subnet_ids         = [aws_subnet.eks_subnet_a.id, aws_subnet.eks_subnet_b.id]
+  subnet_ids        = [aws_subnet.eks_subnet_a.id, aws_subnet.eks_subnet_b.id]
   security_group_id = aws_security_group.eks_cluster_sg.id
   nacl_id           = aws_network_acl.eks_nacl.id
 }
@@ -219,7 +219,8 @@ data "aws_vpc" "existing_vpc" {
 }
 
 data "aws_subnet" "existing_subnet" {
-  id = local.subnet_ids
+  for_each = toset(local.subnet_ids)
+  id       = each.value
 }
 
 data "aws_security_group" "existing_security_group" {
@@ -232,7 +233,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
-    subnet_ids              = [data.aws_subnet.existing_subnet.id]
+    subnet_ids              = values(data.aws_subnet.existing_subnet)[*].id
     security_group_ids      = [data.aws_security_group.existing_security_group.id]
     endpoint_private_access = true
     endpoint_public_access  = true
