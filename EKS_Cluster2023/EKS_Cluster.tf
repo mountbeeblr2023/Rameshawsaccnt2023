@@ -238,6 +238,18 @@ resource "aws_eks_cluster" "eks_cluster" {
     endpoint_private_access = true
     endpoint_public_access  = true
   }
+  enabled_cluster_log_types = [
+    "api",
+    "audit",
+    "authenticator",
+    "controllerManager",
+    "scheduler"
+  ]
+
+  tags = {
+    Name        = "my-eks-cluster"
+    Environment = "Demo"
+  }
 }
 
 # Create EKS cluster IAM role and attach necessary policies
