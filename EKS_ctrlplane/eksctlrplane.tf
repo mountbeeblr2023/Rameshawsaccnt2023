@@ -14,6 +14,5 @@ resource "aws_eks_cluster" "eks_ctrlplane01" {
 # Define the VPC module
 module "vpc" {
   source = "../EKS_VPC/"  # Replace with the path to your VPC module folder
-  vpc_cidr_block = "10.16.0.0/20"
   # Additional input variables required by your VPC module
 }
