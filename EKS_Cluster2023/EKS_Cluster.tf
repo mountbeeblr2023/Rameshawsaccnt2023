@@ -274,3 +274,75 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_cni_policy" {
   role       = aws_iam_role.eks_cluster_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSCNIPolicy"
 }
+
+# Define local variables to capture workernode VPC component IDs
+locals {
+  vpc_id            = aws_vpc.eks_vpc.id
+  subnet_ids        = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
+  security_group_id = aws_security_group.worker-security-group.id
+  nacl_id           = aws_network_acl.eks_nacl.id
+}
+# Retrieve workernode VPC component values using locals
+data "aws_vpc" "worker_existing_vpc" {
+  id = local.vpc_id
+}
+
+data "aws_subnet" "worker_existing_subnet" {
+  for_each = toset(local.subnet_ids)
+  id       = each.value
+}
+
+data "aws_security_group" "worker_existing_security_group" {
+  id = local.security_group_id
+}
+
+
+# Create EKS worker node group
+resource "aws_eks_node_group" "worker_node_group" {
+  cluster_name    = aws_eks_cluster.eks_cluster.name
+  node_group_name = "my-worker-node-group"
+
+  node_role_arn = aws_iam_role.worker_node_role.arn
+
+  subnet_ids = values(data.aws_subnet.worker_existing_subnet)[*].id
+
+  scaling_config {
+    desired_size = 2
+    min_size     = 1
+    max_size     = 3
+  }
+
+  remote_access {
+    ec2_ssh_key = "myworkernode-key-pair"
+  }
+}
+
+# Create IAM role for worker nodes
+resource "aws_iam_role" "worker_node_role" {
+  name = "my-worker-node-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "worker_node_policy" {
+  role       = aws_iam_role.worker_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "worker_node_cni_policy" {
+  role       = aws_iam_role.worker_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodeCNI"
+}
