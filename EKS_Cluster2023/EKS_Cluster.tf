@@ -59,23 +59,6 @@ resource "aws_network_acl" "eks_nacl" {
   tags = {
     Name = "eks-nacl"
   }
-  ingress {
-    #rule_number = "200"
-    protocol    = "-1"  # -1 indicates all protocols
-    action      = "allow"
-    from_port   = 0
-    to_port     = 0
-    cidr_block  = "0.0.0.0/0"
-  }
-
-  egress {
-    #rule_number = "300"
-    protocol    = "-1"  # -1 indicates all protocols
-    action      = "allow"
-    from_port   = 0
-    to_port     = 0
-    cidr_block  = "0.0.0.0/0"
-  }
 }
 
 # Create route table for subnets
@@ -179,24 +162,7 @@ resource "aws_network_acl" "worker_nacl" {
   subnet_ids = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
   tags = {
     Name = "worker-nacl"
-  }
-  ingress {
-    #rule_number = "400"
-    protocol    = "-1"  # -1 indicates all protocols
-    action      = "allow"
-    from_port   = 0
-    to_port     = 0
-    cidr_block  = "0.0.0.0/0"
-  }
-
-  egress {
-    #rule_number = "500"
-    protocol    = "-1"  # -1 indicates all protocols
-    action      = "allow"
-    from_port   = 0
-    to_port     = 0
-    cidr_block  = "0.0.0.0/0"
-  }
+  } 
 }
 
 # Create route table for worker node subnets
