@@ -60,12 +60,21 @@ resource "aws_network_acl" "eks_nacl" {
     Name = "eks-nacl"
   }
   ingress {
-    rule_number = 100
+    rule_number = 200
     protocol    = "-1"  # -1 indicates all protocols
+    action      = "allow"
     from_port   = 0
     to_port     = 0
     cidr_block  = "0.0.0.0/0"
+  }
+
+  egress {
+    rule_number = 300
+    protocol    = "-1"  # -1 indicates all protocols
     action      = "allow"
+    from_port   = 0
+    to_port     = 0
+    cidr_block  = "0.0.0.0/0"
   }
 }
 
@@ -172,12 +181,21 @@ resource "aws_network_acl" "worker_nacl" {
     Name = "worker-nacl"
   }
   ingress {
-    rule_number = 100
+    rule_number = 400
     protocol    = "-1"  # -1 indicates all protocols
+    action      = "allow"
     from_port   = 0
     to_port     = 0
     cidr_block  = "0.0.0.0/0"
+  }
+
+  egress {
+    rule_number = 500
+    protocol    = "-1"  # -1 indicates all protocols
     action      = "allow"
+    from_port   = 0
+    to_port     = 0
+    cidr_block  = "0.0.0.0/0"
   }
 }
 
