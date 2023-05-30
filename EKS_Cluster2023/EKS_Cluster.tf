@@ -60,7 +60,7 @@ resource "aws_network_acl" "eks_nacl" {
     Name = "eks-nacl"
   }
   ingress {
-    rule_number = 200
+    rule_number = "200"
     protocol    = "-1"  # -1 indicates all protocols
     action      = "allow"
     from_port   = 0
@@ -69,7 +69,7 @@ resource "aws_network_acl" "eks_nacl" {
   }
 
   egress {
-    rule_number = 300
+    rule_number = "300"
     protocol    = "-1"  # -1 indicates all protocols
     action      = "allow"
     from_port   = 0
@@ -181,7 +181,7 @@ resource "aws_network_acl" "worker_nacl" {
     Name = "worker-nacl"
   }
   ingress {
-    rule_number = 400
+    rule_number = "400"
     protocol    = "-1"  # -1 indicates all protocols
     action      = "allow"
     from_port   = 0
@@ -190,7 +190,7 @@ resource "aws_network_acl" "worker_nacl" {
   }
 
   egress {
-    rule_number = 500
+    rule_number = "500"
     protocol    = "-1"  # -1 indicates all protocols
     action      = "allow"
     from_port   = 0
