@@ -292,7 +292,7 @@ data "aws_subnet" "worker_existing_subnet" {
 }
 
 data "aws_security_group" "worker_existing_security_group" {
-  id = local.worker_ecurity_group_id
+  id = local.worker_security_group_id
 }
 
 
