@@ -102,7 +102,7 @@ output "EKS_security_group_ids" {
 }
 
 output "workernode_subnet_ids" {
-  value = [aws_subnet.worker_subnet_a_a.id, aws_subnet.worker_subnet_a_b.id]
+  value = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
 }
 output "workernode_vpc_id" {
   value = aws_vpc.worker_vpc.id
