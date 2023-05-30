@@ -9,7 +9,7 @@ resource "aws_launch_configuration" "wrknode_launch_config" {
 }
 
 resource "aws_autoscaling_group" "eks_wrk_asg01" {
-  name                      = eks_wrk_asg01
+  name                      = auto_asg01
   min_size                  = 1
   max_size                  = 3
   desired_capacity          = 2
