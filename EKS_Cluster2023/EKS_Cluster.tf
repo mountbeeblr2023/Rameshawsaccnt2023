@@ -219,7 +219,7 @@ data "aws_vpc" "existing_vpc" {
 }
 
 data "aws_subnet" "existing_subnet" {
-  id = local.subnet_ids
+  ids = local.subnet_ids
 }
 
 data "aws_security_group" "existing_security_group" {
