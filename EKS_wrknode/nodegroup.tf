@@ -1,7 +1,7 @@
 
-resource "aws_eks_node_group" "my_node_group" {
-  cluster_name    = eks-clusterctrlplane01
-  node_group_name = my_node_group
+resource "aws_eks_node_group" "eks_wrknode_grp01" {
+  cluster_name    = module.eks_cluster.eks-clusterctrlplane01
+  node_group_name = "eks_wrknode_grp01"
   node_role_arn   = aws_iam_role.my_node_group_role.arn
   subnet_ids      = module.eks_vpc.workernode_subnet_ids
   scaling_config {
@@ -42,4 +42,8 @@ resource "aws_iam_role_policy_attachment" "cni_policy_attachment" {
 module "eks_vpc" {
   source = "../EKS_VPC/"  # Replace with the path to your VPC module folder
   # Additional input variables required by your VPC module
+}
+
+module "eks_cluster" {
+  source = "../EKS_ctrlplane"  # Update the relative path to the folder containing the EKS cluster code
 }
