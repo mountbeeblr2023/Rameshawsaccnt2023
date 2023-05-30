@@ -1,7 +1,7 @@
 # Create the EKS cluster
 resource "aws_eks_cluster" "eks_ctrlplane01" {
   name     = "eks-clusterctrlplane01"
-  role_arn = arn:aws:iam::301770107409:role/aws-service-role/eks.amazonaws.com/AWSServiceRoleForAmazonEKS
+  role_arn = "arn:aws:iam::301770107409:role/aws-service-role/eks.amazonaws.com/AWSServiceRoleForAmazonEKS"
   version  = "1.21"  # Replace with the desired EKS version
   vpc_config {
     subnet_ids              = module.vpc.subnet_ids
