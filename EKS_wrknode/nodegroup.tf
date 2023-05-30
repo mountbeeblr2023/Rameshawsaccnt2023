@@ -1,6 +1,6 @@
 
 resource "aws_eks_node_group" "eks_wrknode_grp01" {
-  cluster_name    = module.eks_cluster.eks_ctrlplane01
+  cluster_name    = module.eks_cluster.eksctrlplane_deatils
   node_group_name = "eks_wrknode_grp01"
   node_role_arn   = aws_iam_role.my_node_group_role.arn
   subnet_ids      = module.eks_vpc.workernode_subnet_ids
