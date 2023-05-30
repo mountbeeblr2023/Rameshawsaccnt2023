@@ -163,6 +163,21 @@ resource "aws_network_acl" "worker_nacl" {
   tags = {
     Name = "worker-nacl"
   }
+  ingress {
+    rule_number = 100
+    protocol    = "-1"  # -1 indicates all protocols
+    rule_action = "allow"
+    cidr_block  = "0.0.0.0/0"
+  }
+
+  egress {
+    rule_number = 100
+    protocol    = "-1"  # -1 indicates all protocols
+    rule_action = "allow"
+    cidr_block  = "0.0.0.0/0"
+  }
+}
+
 }
 
 # Create route table for worker node subnets
