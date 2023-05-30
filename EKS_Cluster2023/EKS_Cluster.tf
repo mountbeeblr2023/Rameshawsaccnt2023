@@ -219,7 +219,7 @@ data "aws_vpc" "existing_vpc" {
 }
 
 data "aws_subnet" "existing_subnet" {
-  ids = local.subnet_ids
+  id = local.subnet_ids
 }
 
 data "aws_security_group" "existing_security_group" {
@@ -232,7 +232,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
-    subnet_ids              = [data.aws_subnet.existing_subnet.ids]
+    subnet_ids              = [data.aws_subnet.existing_subnet.id]
     security_group_ids      = [data.aws_security_group.existing_security_group.id]
     endpoint_private_access = true
     endpoint_public_access  = true
