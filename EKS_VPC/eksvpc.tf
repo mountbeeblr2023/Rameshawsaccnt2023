@@ -100,3 +100,14 @@ output "EKS_vpc_id" {
 output "EKS_security_group_ids" {
   value = [aws_security_group.eks_cluster_sg.id]
 }
+
+output "workernode_subnet_ids" {
+  value = [aws_subnet.worker_subnet_a_a.id, aws_subnet.worker_subnet_a_b.id]
+}
+output "workernode_vpc_id" {
+  value = aws_vpc.worker_vpc.id
+}
+
+output "workernode_security_group_ids" {
+  value = [aws_security_group.worker-security-group.id]
+}

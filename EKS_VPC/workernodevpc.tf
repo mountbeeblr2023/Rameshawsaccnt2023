@@ -26,7 +26,7 @@ resource "aws_subnet" "worker_subnet_b" {
 }
 
 # Create security group for worker nodes
-resource "aws_security_group" "worker_sg" {
+resource "aws_security_group" "worker-security-group" {
   vpc_id      = aws_vpc.worker_vpc.id
   name        = "worker-security-group"
   description = "Security group for worker nodes"
@@ -89,5 +89,4 @@ resource "aws_network_acl_association" "worker_nacl_association_b" {
   subnet_id      = aws_subnet.worker_subnet_b.id
   network_acl_id = aws_network_acl.worker_nacl.id
 }
-
 
