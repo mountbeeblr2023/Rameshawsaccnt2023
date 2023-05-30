@@ -90,16 +90,7 @@ resource "aws_network_acl_association" "eks_nacl_association_b" {
   network_acl_id = aws_network_acl.eks_nacl.id
 }
 
-output "EKS_subnet_ids" {
-  value = [aws_subnet.eks_subnet_a.id, aws_subnet.eks_subnet_b.id]
-}
-output "EKS_vpc_id" {
-  value = aws_vpc.eks_vpc.id
-}
 
-output "EKS_security_group_ids" {
-  value = [aws_security_group.eks_cluster_sg.id]
-}
 
 
 # Create worker node VPC
@@ -193,20 +184,6 @@ resource "aws_network_acl_association" "worker_nacl_association_b" {
   subnet_id      = aws_subnet.worker_subnet_b.id
   network_acl_id = aws_network_acl.worker_nacl.id
 }
-
-
-output "workernode_subnet_ids" {
-  value = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
-}
-output "workernode_vpc_id" {
-  value = aws_vpc.worker_vpc.id
-}
-
-output "workernode_security_group_ids" {
-  value = [aws_security_group.worker-security-group.id]
-}
-
-
 # VPC Peering Configuration
 
 resource "aws_vpc_peering_connection" "peering" {
@@ -226,3 +203,111 @@ resource "aws_route" "rt_vpc2_peering" {
   destination_cidr_block    = aws_vpc.eks_vpc.cidr_block
   vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
 }
+
+####EKS Cluster VPC Output###
+
+output "EKS_subnet_ids" {
+  value = [aws_subnet.eks_subnet_a.id, aws_subnet.eks_subnet_b.id]
+}
+
+output "EKS_vpc_id" {
+  value = aws_vpc.eks_vpc.id
+}
+
+output "EKS_security_group_ids" {
+  value = [aws_security_group.eks_cluster_sg.id]
+}
+
+####WorkerNode VPC Output###
+
+output "workernode_subnet_ids" {
+  value = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
+}
+
+output "workernode_vpc_id" {
+  value = aws_vpc.worker_vpc.id
+}
+
+output "workernode_security_group_ids" {
+  value = [aws_security_group.worker-security-group.id]
+}
+
+# Retrieve Cluster VPC component values using outputs
+
+data "aws_vpc" "existing_vpc" {
+  id = output.EKS_vpc_id
+}
+
+data "aws_subnet" "existing_subnet" {
+  id = output.EKS_subnet_ids
+}
+
+data "aws_security_group" "existing_security_group" {
+  id = output.EKS_security_group_ids
+}
+
+# Retrieve workernode VPC component values using outputs
+
+data "aws_vpc" "existing_vpc" {
+  id = output.workernode_vpc_id
+}
+
+data "aws_subnet" "existing_subnet" {
+  id = output.workernode_subnet_ids
+}
+
+data "aws_security_group" "existing_security_group" {
+  id = output.workernode_security_group_ids
+}
+
+# Create EKS cluster
+resource "aws_eks_cluster" "test_eks_cluster" {
+  name     = "test_eks_cluster"
+  role_arn = aws_iam_role.eks_cluster_role.arn
+
+  vpc_config {
+    subnet_ids              = [data.aws_subnet.existing_subnet.id]
+    security_group_ids      = [data.aws_security_group.existing_security_group.id]
+    endpoint_private_access = true
+    endpoint_public_access  = true
+  }
+}
+# Create EKS cluster IAM role and attach necessary policies
+resource "aws_iam_role" "test_eks_cluster_role" {
+  name = "test_eks_cluster_role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "test_eks_cluster_policy" {
+  role       = aws_iam_role.test_eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "test_eks_cluster_worker_policy" {
+  role       = aws_iam_role.test_eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "test_eks_cluster_cni_policy" {
+  role       = aws_iam_role.test_eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSCNIPolicy"
+}
+
+
+
+
+
