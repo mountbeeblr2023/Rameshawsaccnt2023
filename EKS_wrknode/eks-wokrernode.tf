@@ -1,9 +1,9 @@
 resource "aws_launch_configuration" "wrknode_launch_config" {
   name          = "wrknode_launch_config"
-  image_id      = "ami-xxxxxxxx"  # Specify the appropriate AMI ID
-  instance_type = "t3.medium"     # Specify the desired instance type
-  iam_instance_profile = aws_iam_instance_profile.my_instance_profile.name
-  security_groups      = [aws_security_group.my_worker_sg.id]
+  image_id      = "ami-1234567890abcdef0"  # Specify the appropriate AMI ID
+  instance_type = "t2.micro"     # Specify the desired instance type
+  iam_instance_profile = "aws_iam_instance_profile.my_instance_profile.name"
+  security_groups      = module.workernode_security_group_ids
 
   # Add other necessary configuration
 }
