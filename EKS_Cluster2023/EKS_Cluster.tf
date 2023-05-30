@@ -178,8 +178,6 @@ resource "aws_network_acl" "worker_nacl" {
   }
 }
 
-}
-
 # Create route table for worker node subnets
 resource "aws_route_table" "worker_route_table" {
   vpc_id = aws_vpc.worker_vpc.id
