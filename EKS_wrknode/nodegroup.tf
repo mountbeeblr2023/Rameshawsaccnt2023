@@ -45,5 +45,5 @@ module "eks_vpc" {
 }
 
 module "eks_cluster" {
-  source = "../EKS_ctrlplane"  # Update the relative path to the folder containing the EKS cluster code
+  source = "../EKS_ctrlplane/"  # Update the relative path to the folder containing the EKS cluster code
 }
