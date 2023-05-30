@@ -89,3 +89,14 @@ resource "aws_network_acl_association" "eks_nacl_association_b" {
   subnet_id      = aws_subnet.eks_subnet_b.id
   network_acl_id = aws_network_acl.eks_nacl.id
 }
+
+output "EKS_subnet_ids" {
+  value = [aws_subnet.eks_subnet_a.id, aws_subnet.eks_subnet_b.id]
+}
+output "EKS_vpc_id" {
+  value = aws_vpc.eks_vpc.id
+}
+
+output "EKS_security_group_ids" {
+  value = [aws_security_group.eks_cluster_sg.id]
+}
