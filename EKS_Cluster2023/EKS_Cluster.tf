@@ -257,7 +257,7 @@ locals {
   worker_vpc_id            = aws_vpc.worker_vpc.id
   worker_subnet_ids        = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
   worker_security_group_id = aws_security_group.worker-security-group.id
-  
+}
 # Define local variables to capture EKS VPC component IDs
 locals {
   vpc_id            = aws_vpc.eks_vpc.id
