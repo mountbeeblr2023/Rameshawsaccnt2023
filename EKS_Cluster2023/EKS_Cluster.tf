@@ -317,7 +317,6 @@ resource "aws_eks_node_group" "my_worker_node_group" {
   subnet_ids                 = values(data.aws_subnet.worker_existing_subnet)[*].id # Replace with your subnet ID(s)
   instance_types             = ["t2.micro"]    # Replace with your desired instance type(s)
   ami_type                   = "AL2_x86_64"
-  node_group_name            = "my_worker_node_group"
   node_role_arn              = data.aws_iam_role.EKS-worker-node-role01.arn
   version                    = "1.25" # Replace with the desired EKS version
   disk_size                  = 8
