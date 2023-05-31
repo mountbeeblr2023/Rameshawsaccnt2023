@@ -230,7 +230,7 @@ data "aws_security_group" "existing_security_group" {
 # Create EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "my-eks-cluster"
-  role_arn = arn:aws:iam::301770107409:role/EKS-ctrl-plane-role01
+  role_arn = "arn:aws:iam::301770107409:role/EKS-ctrl-plane-role01"
   version                    = "1.25" # Replace with the desired EKS version
   vpc_config {
     subnet_ids              = values(data.aws_subnet.existing_subnet)[*].id
@@ -317,7 +317,7 @@ resource "aws_eks_node_group" "my_worker_node_group" {
   subnet_ids                 = values(data.aws_subnet.worker_existing_subnet)[*].id # Replace with your subnet ID(s)
   instance_types             = ["t2.micro"]    # Replace with your desired instance type(s)
   ami_type                   = "AL2_x86_64"
-  node_group_name            = "my-worker-node-group"
+  node_group_name            = "my_worker_node_group"
   node_role_arn              = data.aws_iam_role.EKS-worker-node-role01.arn
   version                    = "1.25" # Replace with the desired EKS version
   disk_size                  = 8
