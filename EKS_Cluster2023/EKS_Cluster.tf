@@ -275,12 +275,12 @@ data "aws_security_group" "worker_existing_security_group" {
 
 # Define the autoscaling group for the worker nodes
 resource "aws_launch_template" "my_worker_node_template" {
-  name_prefix   = "my-worker-node-template"
+  name_prefix   = "my_worker_node_template"
   image_id      = "ami-1234567890abcdef0" # Replace with your desired AMI ID
   instance_type = "t2.micro"    # Replace with your desired instance type
 
   iam_instance_profile {
-    name = data.aws_iam_role.EKS-worker-node-role01.arn
+    name = data.aws_iam_role.EKS-worker-node-role01.name
   }
 
   block_device_mappings {
@@ -314,7 +314,7 @@ resource "aws_eks_node_group" "my_worker_node_group" {
     ec2_ssh_key        = "terraformkey2023" # Replace with your SSH key
     source_security_group_ids = [data.aws_security_group.worker_existing_security_group.id]
   }
-  subnet_ids                 = values(data.aws_subnet.worker_existing_subnet)[*].id # Replace with your subnet ID(s)
+  subnet_ids                 = data.aws_subnet.worker_existing_subnet.ids # Replace with your subnet ID(s)
   instance_types             = ["t2.micro"]    # Replace with your desired instance type(s)
   ami_type                   = "AL2_x86_64"
   node_role_arn              = data.aws_iam_role.EKS-worker-node-role01.arn
