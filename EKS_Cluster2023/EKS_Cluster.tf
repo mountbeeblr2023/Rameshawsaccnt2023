@@ -259,27 +259,27 @@ locals {
   worker_security_group_id = aws_security_group.worker-security-group.id
 }
 # Retrieve workernode VPC component values using locals
-data "aws_vpc" "worker_existing_vpc" {
-  id = local.worker_vpc_id
-}
-resource "aws_subnet" "worker_existing_subnet" {
-  for_each    = toset(local.worker_subnet_ids)
-  vpc_id      = aws_vpc.worker_vpc.id
-  cidr_block  = each.key
-  availability_zone = each.value
-  tags = {
-    Name = "worker-subnet-${each.key}"
-  }
-}
+#data "aws_vpc" "worker_existing_vpc" {
+#  id = local.worker_vpc_id
+#}
+#resource "aws_subnet" "worker_existing_subnet" {
+#  for_each    = toset(local.worker_subnet_ids)
+#  vpc_id      = aws_vpc.worker_vpc.id
+#  cidr_block  = each.key
+#  availability_zone = each.value
+#  tags = {
+#    Name = "worker-subnet-${each.key}"
+#  }
+#}
 
-data "aws_subnet" "worker_existing_subnet" {
-  for_each = toset(local.worker_subnet_ids)
-  id       = each.value
-}
+#data "aws_subnet" "worker_existing_subnet" {
+#  for_each = toset(local.worker_subnet_ids)
+#  id       = each.value
+#}
 
-data "aws_security_group" "worker_existing_security_group" {
-  id = local.worker_security_group_id
-}
+#data "aws_security_group" "worker_existing_security_group" {
+#  id = local.worker_security_group_id
+#}
 
 
 # Define the autoscaling group for the worker nodes
