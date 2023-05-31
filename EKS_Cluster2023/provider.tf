@@ -8,9 +8,5 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.0"
     }
-    eks = {
-      source  = "hashicorp/aws"
-      version = "~> 0.28"
-    }
   }
 }
