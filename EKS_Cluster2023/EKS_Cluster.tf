@@ -293,13 +293,27 @@ resource "aws_launch_template" "my_worker_node_template" {
 }
 
 resource "aws_autoscaling_group" "my_worker_node_autoscaling" {
-  name                 = "my_worker_node_autoscaling"
-  launch_template      = aws_launch_template.my_worker_node_template.id
+  name = "my_worker_node_autoscaling"
+
+  mixed_instances_policy {
+    launch_template {
+      launch_template_specification {
+        launch_template_id   = aws_launch_template.my_worker_node_template.id
+        version              = "$Latest"
+      }
+
+      override {
+        instance_type = "t2.micro"
+      }
+    }
+  }
+
   min_size             = 1
   max_size             = 3
   desired_capacity     = 2
-  vpc_zone_identifier  = values(data.aws_subnet.worker_existing_subnet)[*].id
+  vpc_zone_identifier  = aws_subnet.worker_existing_subnet.*.id
 }
+
 
 # Associate the worker nodes with the EKS cluster
 resource "aws_eks_node_group" "my_worker_node_group" {
@@ -314,7 +328,7 @@ resource "aws_eks_node_group" "my_worker_node_group" {
     ec2_ssh_key        = "terraformkey2023" # Replace with your SSH key
     source_security_group_ids = [data.aws_security_group.worker_existing_security_group.id]
   }
-  subnet_ids                 = data.aws_subnet.worker_existing_subnet.ids # Replace with your subnet ID(s)
+  subnet_ids                 = values(data.aws_subnet.worker_existing_subnet)[*].id # Replace with your subnet ID(s)
   instance_types             = ["t2.micro"]    # Replace with your desired instance type(s)
   ami_type                   = "AL2_x86_64"
   node_role_arn              = data.aws_iam_role.EKS-worker-node-role01.arn
