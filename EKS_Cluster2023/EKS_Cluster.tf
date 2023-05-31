@@ -272,10 +272,10 @@ resource "aws_subnet" "worker_existing_subnet" {
   }
 }
 
-#data "aws_subnet" "worker_existing_subnet" {
-#  for_each = toset(local.worker_subnet_ids)
-#  id       = each.value
-#}
+data "aws_subnet" "worker_existing_subnet" {
+  for_each = toset(local.worker_subnet_ids)
+  id       = each.value
+}
 
 data "aws_security_group" "worker_existing_security_group" {
   id = local.worker_security_group_id
