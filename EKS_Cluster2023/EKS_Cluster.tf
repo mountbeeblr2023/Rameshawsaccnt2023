@@ -257,29 +257,54 @@ locals {
   worker_vpc_id            = aws_vpc.worker_vpc.id
   worker_subnet_ids        = [aws_subnet.worker_subnet_a.id, aws_subnet.worker_subnet_b.id]
   worker_security_group_id = aws_security_group.worker-security-group.id
+  
+# Define local variables to capture EKS VPC component IDs
+locals {
+  vpc_id            = aws_vpc.eks_vpc.id
+  subnet_ids        = {
+    "eks_subnet_a" = aws_subnet.eks_subnet_a.id,
+    "eks_subnet_b" = aws_subnet.eks_subnet_b.id
+  }
+  security_group_id = aws_security_group.eks_cluster_sg.id
+  nacl_id           = aws_network_acl.eks_nacl.id
 }
-# Retrieve workernode VPC component values using locals
-#data "aws_vpc" "worker_existing_vpc" {
-#  id = local.worker_vpc_id
-#}
-#resource "aws_subnet" "worker_existing_subnet" {
-#  for_each    = toset(local.worker_subnet_ids)
-#  vpc_id      = aws_vpc.worker_vpc.id
-#  cidr_block  = each.key
-#  availability_zone = each.value
-#  tags = {
-#    Name = "worker-subnet-${each.key}"
-#  }
-#}
 
-#data "aws_subnet" "worker_existing_subnet" {
-#  for_each = toset(local.worker_subnet_ids)
-#  id       = each.value
-#}
+# ...
 
-#data "aws_security_group" "worker_existing_security_group" {
-#  id = local.worker_security_group_id
-#}
+# Retrieve VPC component values using locals
+data "aws_vpc" "existing_vpc" {
+  id = local.vpc_id
+}
+
+data "aws_subnet" "existing_subnet" {
+  for_each = local.subnet_ids
+  id       = each.value
+}
+
+# ...
+
+# Define local variables to capture worker node VPC component IDs
+locals {
+  worker_vpc_id            = aws_vpc.worker_vpc.id
+  worker_subnet_ids        = {
+    "worker_subnet_a" = aws_subnet.worker_subnet_a.id,
+    "worker_subnet_b" = aws_subnet.worker_subnet_b.id
+  }
+  worker_security_group_id = aws_security_group.worker-security-group.id
+}
+
+# ...
+
+# Retrieve worker node VPC component values using locals
+data "aws_vpc" "worker_existing_vpc" {
+  id = local.worker_vpc_id
+}
+
+data "aws_subnet" "worker_existing_subnet" {
+  for_each = local.worker_subnet_ids
+  id       = each.value
+}
+
 
 
 # Define the autoscaling group for the worker nodes
