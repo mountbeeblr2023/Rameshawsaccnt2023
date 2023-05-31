@@ -230,8 +230,8 @@ data "aws_security_group" "existing_security_group" {
 # Create EKS cluster
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "my-eks-cluster"
-  role_arn = aws_iam_role.eks_cluster_role.arn
-
+  role_arn = arn:aws:iam::301770107409:role/EKS-ctrl-plane-role01
+  version                    = "1.25" # Replace with the desired EKS version
   vpc_config {
     subnet_ids              = values(data.aws_subnet.existing_subnet)[*].id
     security_group_ids      = [data.aws_security_group.existing_security_group.id]
@@ -250,41 +250,6 @@ resource "aws_eks_cluster" "eks_cluster" {
     Name        = "my-eks-cluster"
     Environment = "Demo"
   }
-}
-
-# Create EKS cluster IAM role and attach necessary policies
-resource "aws_iam_role" "eks_cluster_role" {
-  name = "my-eks-cluster-role"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "eks.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cluster_worker_policy" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cluster_cni_policy" {
-  role       = aws_iam_role.eks_cluster_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSCNIPolicy"
 }
 
 # Define local variables to capture workernode VPC component IDs
@@ -308,52 +273,59 @@ data "aws_security_group" "worker_existing_security_group" {
 }
 
 
-# Create EKS worker node group
-resource "aws_eks_node_group" "worker_node_group" {
+# Define the autoscaling group for the worker nodes
+resource "aws_launch_template" "my_worker_node_template" {
+  name_prefix   = "my-worker-node-template"
+  image_id      = "ami-1234567890abcdef0" # Replace with your desired AMI ID
+  instance_type = "t2.micro"    # Replace with your desired instance type
+
+  iam_instance_profile {
+    name = data.aws_iam_role.EKS-worker-node-role01.arn
+  }
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size = 8 # Replace with your desired volume size
+      volume_type = "gp2"
+    }
+  }
+}
+
+resource "aws_autoscaling_group" "my_worker_node_autoscaling" {
+  name                 = "my_worker_node_autoscaling"
+  launch_template      = aws_launch_template.my_worker_node_template.id
+  min_size             = 1
+  max_size             = 3
+  desired_capacity     = 2
+  vpc_zone_identifier  = values(data.aws_subnet.worker_existing_subnet)[*].id
+}
+
+# Associate the worker nodes with the EKS cluster
+resource "aws_eks_node_group" "my_worker_node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "my-worker-node-group"
-
-  node_role_arn = aws_iam_role.worker_node_role.arn
-
-  subnet_ids = values(data.aws_subnet.worker_existing_subnet)[*].id
-
   scaling_config {
     desired_size = 2
     min_size     = 1
     max_size     = 3
   }
-
   remote_access {
-    ec2_ssh_key = "myworkernode-key-pair"
+    ec2_ssh_key        = "terraformkey2023" # Replace with your SSH key
+    source_security_group_ids = [data.aws_security_group.worker_existing_security_group.id]
   }
+  subnet_ids                 = values(data.aws_subnet.worker_existing_subnet)[*].id # Replace with your subnet ID(s)
+  instance_types             = ["t2.micro"]    # Replace with your desired instance type(s)
+  ami_type                   = "AL2_x86_64"
+  node_group_name            = "my-worker-node-group"
+  node_role_arn              = data.aws_iam_role.EKS-worker-node-role01.arn
+  version                    = "1.25" # Replace with the desired EKS version
+  disk_size                  = 8
+  capacity_type              = "ON_DEMAND"
 }
 
-# Create IAM role for worker nodes
-resource "aws_iam_role" "worker_node_role" {
-  name = "my-worker-node-role"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
+# Define the data block to fetch the IAM role ARN
+data "aws_iam_role" "EKS-worker-node-role01" {
+  name = "EKS-worker-node-role01" # Replace with the actual IAM role name
 }
 
-resource "aws_iam_role_policy_attachment" "worker_node_policy" {
-  role       = aws_iam_role.worker_node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "worker_node_cni_policy" {
-  role       = aws_iam_role.worker_node_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodeCNI"
-}
