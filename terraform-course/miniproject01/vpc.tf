@@ -92,8 +92,7 @@ resource "aws_route_table_association" "project01_private_route_table_associatio
 }
 
 resource "aws_route_table_association" "project01_public_route_table_association" {
-  count          = length(aws_subnet.project01_public_subnet)
-  subnet_id      = aws_subnet.project01_public_subnet[count.index].id
+  subnet_id      = aws_subnet.project01_public_subnet.id
   route_table_id = aws_route_table.project01_public_route_table.id
 }
 
