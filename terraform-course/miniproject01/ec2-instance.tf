@@ -6,6 +6,7 @@ resource "aws_instance" "testserver01" {
     app = "meemo"
     tier = "dev"
     os = "RedHat"
+    Name = "testserver01"
   }
 }
 
