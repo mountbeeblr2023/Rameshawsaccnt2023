@@ -10,5 +10,5 @@ resource "aws_instance" "testserver01" {
   }
 }
 locals {
-  selected_ami = lookup(var.multi_ami, "RedHat-ami", "default-ami-id")
+  selected_ami = lookup(var.multi-ami, "RedHat-ami", "default-ami-id")
 }
