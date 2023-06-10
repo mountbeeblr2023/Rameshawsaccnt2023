@@ -38,7 +38,7 @@ resource "aws_subnet" "project01_private_subnet" {
  ######### Associate the IGW to Public Route Table ############
  resource "aws_route_table_association" "project01-IGW_association" {
    route_table_id         = aws_route_table.project01_public_route_table.id
-   destination_cidr_block = "0.0.0.0/0"
+   #destination_cidr_block = "0.0.0.0/0"
    gateway_id             = aws_internet_gateway.project01-IGW.id
 }
 
