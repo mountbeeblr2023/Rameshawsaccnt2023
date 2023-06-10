@@ -17,7 +17,6 @@ resource "aws_vpc" "project01_vpc" {
 
 ########### Create subnets ##########
 resource "aws_subnet" "project01_public_subnet" {
-  subnet_id               = var.blr_public_subnet
   vpc_id                  = aws_vpc.project01_vpc.id
   cidr_block              = var.blr_public_subnet
   availability_zone       = var.blr_public_az
