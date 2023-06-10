@@ -1,9 +1,3 @@
-# variable "aminame" {
-#   type        = string
-#   default     = "ami-0715c1897453cabd1"
-#   description = "useast region ami"
-# }
-
 variable multi-ami {
   type        = map
   default     = {
@@ -11,7 +5,7 @@ variable multi-ami {
     RedHat-ami = "ami-026ebd4cfe2c043b2"
     Ubuntu-ami = "ami-053b0d53c279acc90"
   }
-  description = "description"
+  description = "Diffrent flavors of ami's"
 }
 
 variable myinstancetype {
