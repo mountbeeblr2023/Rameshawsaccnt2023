@@ -26,3 +26,4 @@ resource "aws_security_group" "project01_public_secgroup01" {
         cidr_block = ["0.0.0.0/0"]
     }
   }
+}
