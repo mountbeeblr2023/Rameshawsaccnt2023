@@ -39,8 +39,8 @@ variable blr_private_subnet {
   description = "blr_private_subnet"
 }
 variable blr_public_subnet {
-  type        = list
-  default     = ["10.16.0.32/28"]
+  type        = string
+  default     = "10.16.0.32/28"
   description = "blr_public_subnet"
 }
 
@@ -51,8 +51,8 @@ variable blr_public_az {
   description = "AZ for private subnet"
 }
 variable blr_private_az {
-  type        = list
-  default     = ["us-east-1c"]
+  type        = string
+  default     = "us-east-1c"
   description = "AZ for public subnet"
 }
 
