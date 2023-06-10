@@ -45,12 +45,12 @@ variable blr_public_subnet {
 }
 
 ####### AZ Varaible for both private & public subnet ########
-variable blr_public_az {
+variable blr_private_az {
   type        = list
   default     = ["us-east-1a", "us-east-1b"]
   description = "AZ for private subnet"
 }
-variable blr_private_az {
+variable blr_public_az {
   type        = string
   default     = "us-east-1c"
   description = "AZ for public subnet"
