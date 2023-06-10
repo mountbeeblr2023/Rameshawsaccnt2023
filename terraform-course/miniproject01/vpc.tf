@@ -78,7 +78,7 @@ resource "aws_route_table" "project01_private_route_table" {
 }
 
 ####### Create public route table for subnets ########
-resource "aws_route_table" "project01_publice_route_table" {
+resource "aws_route_table" "project01_public_route_table" {
   vpc_id = aws_vpc.project01_vpc.id
   tags = {
     Name = "project01_private_route_table"
