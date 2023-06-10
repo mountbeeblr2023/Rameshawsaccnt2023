@@ -12,7 +12,7 @@ resource "aws_security_group" "project01_private_secgroup01" {
         cidr_block = ["0.0.0.0/0"]
     }
   }
-
+}
 resource "aws_security_group" "project01_public_secgroup01" {
   vpc_id      = aws_vpc.project01_vpc.id
   name        = "project01_public-sg"
