@@ -25,6 +25,13 @@ variable "instances" {
   ]
 }
 
+###### common destination block ipaddr ######
+variable dest_cidr_block {
+  type        = string
+  default     = "0.0.0.0/0"
+  description = "description"
+}
+
 #### VPC Variables ####
 variable blr_vpc {
   type        = string
