@@ -1,5 +1,6 @@
 resource "aws_instance" "testserver01" {
-  ami           = local.selected_ami
+#   ami           = local.selected_ami
+  ami = lookup(var.multi-ami, aws_instance.testserver01.tags["RedHat-ami"], "default-ami-id")
   instance_type = var.myinstancetype
 
   tags = {
@@ -9,6 +10,6 @@ resource "aws_instance" "testserver01" {
     Name = "testserver01"
   }
 }
-locals {
-  selected_ami = lookup(var.multi-ami, "RedHat-ami", "default-ami-id")
-}
+# locals {
+#   selected_ami = lookup(var.multi-ami, "RedHat-ami", "default-ami-id")
+# }
