@@ -1,5 +1,5 @@
 resource "aws_instance" "testserver01" {
-  ami           = lookup(var.multi-ami, aws_instance.testserver01.tags["RedHat"], "default-ami-id")
+  ami           = lookup(var.multi-ami, aws_instance.testserver01.tags["os"], "default-ami-id")
   instance_type = var.myinstancetype
 
   tags = {
