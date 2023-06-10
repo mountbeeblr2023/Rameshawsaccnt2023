@@ -36,38 +36,38 @@ resource "aws_subnet" "project01_private_subnet" {
   }
 }
 
-######### Associate the IGW to Public Route Table ############
-resource "aws_route_table_association" "project01-IGW_association" {
-  subnet_id         = aws_subnet.project01_subnet_c.id
-  route_table_id    = aws_route_table.project01_publice_route_table.id
-}
+# ######### Associate the IGW to Public Route Table ############
+# resource "aws_route_table_association" "project01-IGW_association" {
+#   subnet_id         = aws_subnet.project01_subnet_c.id
+#   route_table_id    = aws_route_table.project01_publice_route_table.id
+# }
 
-######### Create security group #########
-resource "aws_security_group" "project01r_sg" {
-  vpc_id      = aws_vpc.project01_vpc.id
-  name        = "project01-sg"
-  description = "Security group for project01"
+# ######### Create security group #########
+# resource "aws_security_group" "project01r_sg" {
+#   vpc_id      = aws_vpc.project01_vpc.id
+#   name        = "project01-sg"
+#   description = "Security group for project01"
 
-######## Ingress rules ########
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# ######## Ingress rules ########
+#   ingress {
+#     from_port   = 443
+#     to_port     = 443
+#     protocol    = "tcp"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 
-####### Egress rules ########
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+# ####### Egress rules ########
+#   egress {
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#   }
 
-  tags = {
-    Name = "project01-sg"
-  }
-}
+#   tags = {
+#     Name = "project01-sg"
+#   }
+# }
 
 ####### Create private route table for subnets #######
 resource "aws_route_table" "project01_private_route_table" {
