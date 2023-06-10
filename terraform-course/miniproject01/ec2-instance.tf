@@ -23,7 +23,7 @@ variable "instances" {
       instance_type  = "t2.large"     # Replace with your prod instance type
     }
   ]
-
+}
 resource "aws_instance" "ec2_instances" {
   count = length(var.instances)
 
@@ -33,17 +33,7 @@ resource "aws_instance" "ec2_instances" {
   tags = {
     Name = var.instances[count.index].name
   }
-}
-
-locals {
-  os_flavors = {
-    "dev"  = "AMazon-Linux"   # Replace with the expected OS flavor for dev
-    "qa"   = "RedHat-Linux" # Replace with the expected OS flavor for qa
-    "prod" = "Ubuntu-Linux"   # Replace with the expected OS flavor for prod
-  }
-}
-
-provisioner "local-exec" {
+  provisioner "local-exec" {
     command = <<-EOT
       os_flavor=$(aws ec2 describe-images --image-ids ${self.ami} --query 'Images[0].Description' --output text | awk '{print tolower($0)}')
       expected_flavor="${local.os_flavors[self.tags.Name]}"
@@ -52,5 +42,13 @@ provisioner "local-exec" {
         exit 1
       fi
     EOT
+  }
+}
+
+locals {
+  os_flavors = {
+    "dev"  = "AMazon-Linux"   # Replace with the expected OS flavor for dev
+    "qa"   = "RedHat-Linux" # Replace with the expected OS flavor for qa
+    "prod" = "Ubuntu-Linux"   # Replace with the expected OS flavor for prod
   }
 }
