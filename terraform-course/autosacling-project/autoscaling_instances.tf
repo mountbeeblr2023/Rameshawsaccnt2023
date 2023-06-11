@@ -17,7 +17,7 @@ resource "aws_launch_template" "project01_launch_template" {
 
 # Create Auto Scaling Group
 resource "aws_autoscaling_group" "project01_autoscaling_group" {
-  name                      = "project01-blr-asg"
+  name                      = "project01_autoscaling_group"
   launch_template {
     id      = aws_launch_template.project01_launch_template.id
     version = "$Latest"
