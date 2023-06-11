@@ -2,7 +2,7 @@ resource "aws_lb" "blr-public-alb" {
   name               = "blr-public-alb"
   internal           = false
   load_balancer_type = "application" 
-  depends_on         = [aws_autoscaling_group.project01-blr-asg]          
+  depends_on         = [aws_autoscaling_group.project01_autoscaling_group]          
  #count              = length(aws_subnet.project01_public_subnet)
  #subnets            = [aws_subnet.project01_public_subnet[count.index].id]
   subnets           = [aws_subnet.project01_public_subnet[0].id, aws_subnet.project01_public_subnet[1].id]
