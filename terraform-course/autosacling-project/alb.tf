@@ -17,9 +17,9 @@ resource "aws_lb_target_group" "blr-alb-target-group" {
   vpc_id      = aws_vpc.project01_vpc.id
 }
 
-resource "aws_lb_target_group_attachment" "ec2_target_attachment" {
+resource "aws_lb_target_group_attachment" "autoscaling_target_attachment" {
   count           = length(var.instances)
   target_group_arn = aws_lb_target_group.blr-alb-target-group.arn
-  target_id       = aws_instance.ec2_instances[count.index].id
+  target_id       = aws_autoscaling_group.project01_autoscaling_group.id
   port            = 443
 }
