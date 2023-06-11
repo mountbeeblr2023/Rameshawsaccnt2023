@@ -22,7 +22,7 @@ resource "aws_subnet" "project01_public_subnet" {
   cidr_block              = var.blr_public_subnet[count.index]
   availability_zone       = var.blr_public_az[count.index]
   tags = {
-    Name = "project01_public_subnet-${element(["a", "b"], count.index)}"
+    Name = "project01_public_subnet-${element(["c", "d"], count.index)}"
   }
 }
 
@@ -75,7 +75,8 @@ resource "aws_route_table_association" "project01_private_route_table_associatio
 }
 
 resource "aws_route_table_association" "project01_public_route_table_association" {
-  subnet_id      = aws_subnet.project01_public_subnet.id
+  count          = length(aws_subnet.project01_public_subnet)
+  subnet_id      = aws_subnet.project01_public_subnet[count.index].id
   route_table_id = aws_route_table.project01_public_route_table.id
 }
 
