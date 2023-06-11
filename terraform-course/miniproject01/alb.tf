@@ -1,5 +1,5 @@
-resource "aws_lb" "project01_public_alb" {
-  name               = "project01_public_alb"
+resource "aws_lb" "blr-public-alb" {
+  name               = "blr-public-alb"
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.project01_public_subnet.id]
@@ -7,7 +7,7 @@ resource "aws_lb" "project01_public_alb" {
   security_groups    = [aws_security_group.project01_public_secgroup01.id]
 
   tags = {
-    Name = "project01_public_alb"
+    Name = "blr-public-alb"
   }
 }
 resource "aws_lb_target_group" "blr-alb-target-group" {
