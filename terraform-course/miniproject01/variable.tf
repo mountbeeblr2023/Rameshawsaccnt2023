@@ -13,11 +13,6 @@ variable "instances" {
       instance_type  = "t2.micro"     # Replace with your dev instance type
     },
     {
-      name           = "qa"
-      ami_id         = "ami-04a0ae173da5807d3"  # Replace with your qa AMI ID
-      instance_type  = "t2.micro"    # Replace with your qa instance type
-    },
-    {
       name           = "prod"
       ami_id         = "ami-04a0ae173da5807d3"  # Replace with your prod AMI ID
       instance_type  = "t2.micro"     # Replace with your prod instance type
