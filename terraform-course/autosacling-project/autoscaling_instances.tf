@@ -27,7 +27,7 @@ resource "aws_autoscaling_group" "project01_autoscaling_group" {
   desired_capacity          = 2
   health_check_type         = "ELB"
   health_check_grace_period = 300
-  vpc_zone_identifier       = [aws_subnet.project01_private_subnet[count.index].id]
+  vpc_zone_identifier       = [aws_subnet.project01_public_subnet.id]
   target_group_arns         = [aws_lb_target_group.blr-alb-target-group.arn]
   termination_policies      = ["Default"]
 }
