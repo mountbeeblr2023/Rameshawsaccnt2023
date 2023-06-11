@@ -17,13 +17,23 @@ resource "aws_vpc" "project01_vpc" {
 
 ########### Create subnets ##########
 resource "aws_subnet" "project01_public_subnet" {
+  count                   = length(var.blr_public_subnet)
   vpc_id                  = aws_vpc.project01_vpc.id
-  cidr_block              = var.blr_public_subnet
-  availability_zone       = var.blr_public_az
+  cidr_block              = var.blr_public_subnet[count.index]
+  availability_zone       = var.blr_public_az[count.index]
   tags = {
-    Name = "project01_public_subnet-c"
+    Name = "project01_public_subnet-${element(["a", "b"], count.index)}"
   }
 }
+
+# resource "aws_subnet" "project01_public_subnet" {
+#   vpc_id                  = aws_vpc.project01_vpc.id
+#   cidr_block              = var.blr_public_subnet
+#   availability_zone       = var.blr_public_az
+#   tags = {
+#     Name = "project01_public_subnet-c"
+#   }
+# }
 
 resource "aws_subnet" "project01_private_subnet" {
   count                   = length(var.blr_private_subnet)
