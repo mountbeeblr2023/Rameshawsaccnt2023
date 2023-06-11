@@ -3,7 +3,7 @@ resource "aws_lb" "blr-public-alb" {
   internal           = false
   load_balancer_type = "application"           
   count              = length(aws_subnet.project01_public_subnet)
-  subnet             = aws_subnet.project01_public_subnet[count.index].id
+  subnets            = aws_subnet.project01_public_subnet[count.index].id
   security_groups    = [aws_security_group.project01_public_secgroup01.id]
 
   tags = {
@@ -19,6 +19,6 @@ resource "aws_lb_target_group" "blr-alb-target-group" {
 
 resource "aws_lb_target_group_attachment" "autoscaling_target_attachment" {
   target_group_arn = aws_lb_target_group.blr-alb-target-group.arn
-  target_id       = aws_autoscaling_group.project01_autoscaling_group.id
+  target_id       = aws_autoscaling_group.project01_autoscaling_group[count.index].id
   port            = 443
 }
