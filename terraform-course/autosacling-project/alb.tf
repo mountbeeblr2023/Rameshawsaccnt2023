@@ -23,6 +23,6 @@ resource "aws_lb_target_group_attachment" "autoscaling_target_attachment" {
   target_group_arn = aws_lb_target_group.blr-alb-target-group.arn
   count            = length(aws_autoscaling_group.project01_autoscaling_group)
  #target_id        = aws_autoscaling_group.project01_autoscaling_group[count.index].id
-  target_id        = [aws_autoscaling_group.project01_autoscaling_group[count.index].id]
+  target_id        = aws_autoscaling_group.project01_autoscaling_group[count.index].id
   port             = 443
 }
