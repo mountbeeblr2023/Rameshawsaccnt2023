@@ -23,7 +23,7 @@ resource "aws_autoscaling_group" "project01_autoscaling_group" {
     version = "$Latest"
   }
   min_size                  = 2
-  max_size                  = 1
+  max_size                  = 5
   desired_capacity          = 2
   health_check_type         = "ELB"
   health_check_grace_period = 300

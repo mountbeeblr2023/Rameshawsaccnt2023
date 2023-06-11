@@ -2,7 +2,9 @@ resource "aws_lb" "blr-public-alb" {
   name               = "blr-public-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.project01_public_subnet.id]
+  count              = length(aws_subnet.project01_private_subnet)
+  subnet_id          = aws_subnet.project01_private_subnet[count.index].id
+ 
 
   security_groups    = [aws_security_group.project01_public_secgroup01.id]
 
