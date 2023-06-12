@@ -13,24 +13,20 @@ resource "aws_launch_template" "project01_launch_template" {
       Name = "project01-instance"
     }
   }
-}
-
-# Create Auto Scaling Group
-resource "aws_autoscaling_group" "project01_autoscaling_group" {
-  name                      = "project01-asg"
-  launch_template {
-    id                       = aws_launch_template.project01_launch_template.id
-    version                  = "$Latest"
+block_device_mappings {
+    device_name           = "/dev/sdf"
+    ebs {
+      volume_size         = 8
+      delete_on_termination = true
+    }
   }
-
-  min_size                  = 1
-  max_size                  = 4
-  desired_capacity          = 2
-  vpc_zone_identifier       = [aws_subnet.project01_private_subnet-a.id, aws_subnet.project01_private_subnet-b.id]
-
-  tag {
-    key                      = "Name"
-    value                    = "project01-asg"
-    propagate_at_launch     = true
+  dynamic "network_interfaces" {
+    for_each = var.blr_private_subnet
+    content {
+      device_index         = network_interfaces.key
+      subnet_id            = network_interfaces.value
+    }
   }
 }
+
+
