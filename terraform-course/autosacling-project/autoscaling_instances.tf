@@ -25,6 +25,8 @@ block_device_mappings {
     content {
       device_index         = network_interfaces.key
       subnet_id            = network_interfaces.value.id
+      security_groups      = [aws_security_group.project01_private_secgroup01.id]
+
     }
   }
 }
