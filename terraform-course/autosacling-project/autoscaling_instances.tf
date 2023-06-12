@@ -24,7 +24,7 @@ block_device_mappings {
     for_each = range(length(aws_subnet.project01_private_subnet))
     content {
       device_index         = network_interfaces.key
-      subnet_id            = aws_subnet.project01_private_subnet[each.key].id
+      subnet_id            = aws_subnet.project01_private_subnet[network_interfaces.key].id
       security_groups      = [aws_security_group.project01_private_secgroup01.id]
     }
   }
