@@ -29,5 +29,22 @@ block_device_mappings {
   }
 }
 
+############### Auto scaling group & policy ###############
+resource "aws_autoscaling_group" "project01_autoscaling_group" {
+  name                      = "project01-asg"
+  launch_template {
+    id                       = aws_launch_template.project01_launch_template.id
+    version                  = "$Latest"
+  }
 
+  min_size                  = 1
+  max_size                  = 4
+  desired_capacity          = 2
+  vpc_zone_identifier       = aws_subnet.project01_private_subnet[*].id
+  tag {
+    key                      = "Name"
+    value                    = "project01-asg"
+    propagate_at_launch     = true
+  }
+}
 
