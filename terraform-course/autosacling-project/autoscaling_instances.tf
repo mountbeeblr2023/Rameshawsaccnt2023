@@ -21,10 +21,10 @@ block_device_mappings {
     }
   }
   dynamic "network_interfaces" {
-    for_each = var.blr_private_subnet
+    for_each = aws_subnet.project01_private_subnet
     content {
       device_index         = network_interfaces.key
-      subnet_id            = network_interfaces.value
+      subnet_id            = network_interfaces.value.id
     }
   }
 }
