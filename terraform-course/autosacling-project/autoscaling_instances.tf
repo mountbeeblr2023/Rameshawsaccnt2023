@@ -25,6 +25,7 @@ block_device_mappings {
     content {
       device_index         = network_interfaces.key
       subnet_id            = network_interfaces.value.id
+      availability_zone    = network_interfaces.value.availability_zone
     }
   }
 }
