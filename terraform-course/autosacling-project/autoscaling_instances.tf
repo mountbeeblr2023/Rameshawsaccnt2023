@@ -5,7 +5,7 @@ resource "aws_launch_template" "project01_launch_template" {
   instance_type = var.instance_type
   key_name      = var.existing_key_pair
 
-  vpc_security_group_ids = [aws_security_group.project01_private_secgroup01.id]
+  #vpc_security_group_ids = [aws_security_group.project01_private_secgroup01.id]
 
   tag_specifications {
     resource_type = "instance"
@@ -25,9 +25,27 @@ block_device_mappings {
     content {
       device_index         = network_interfaces.key
       subnet_id            = network_interfaces.value.id
+      security_groups      = [aws_security_group.project01_private_secgroup01.id]
     }
   }
 }
 
+############### Auto scaling group & policy ###############
+resource "aws_autoscaling_group" "project01_autoscaling_group" {
+  name                      = "project01-asg"
+  launch_template {
+    id                       = aws_launch_template.project01_launch_template.id
+    version                  = "$Latest"
+  }
 
+  min_size                  = 1
+  max_size                  = 4
+  desired_capacity          = 2
+  vpc_zone_identifier       = aws_subnet.project01_private_subnet[*].id
+  tag {
+    key                      = "Name"
+    value                    = "project01-asg"
+    propagate_at_launch     = true
+  }
+}
 
