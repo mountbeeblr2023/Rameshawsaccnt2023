@@ -26,6 +26,7 @@ block_device_mappings {
       # device_index         = network_interfaces.key
       # subnet_id            = network_interfaces.value.id
       device_index           = 0  # Set the desired device index
+      network_card_index     = 0
       subnet_id              = aws_subnet.project01_private_subnet[0].id
       security_groups        = [aws_security_group.project01_private_secgroup01.id]
     }
