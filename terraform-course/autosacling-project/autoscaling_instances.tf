@@ -5,7 +5,7 @@ resource "aws_launch_template" "project01_launch_template" {
   instance_type = var.instance_type
   key_name      = var.existing_key_pair
 
-  vpc_security_group_ids = [aws_security_group.project01_private_secgroup01.id]
+  #vpc_security_group_ids = [aws_security_group.project01_private_secgroup01.id]
 
   tag_specifications {
     resource_type = "instance"
@@ -26,7 +26,6 @@ block_device_mappings {
       device_index         = network_interfaces.key
       subnet_id            = network_interfaces.value.id
       security_groups      = [aws_security_group.project01_private_secgroup01.id]
-
     }
   }
 }
