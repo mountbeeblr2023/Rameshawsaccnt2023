@@ -26,7 +26,8 @@ resource "aws_autoscaling_group" "project01_autoscaling_group" {
   min_size                  = 1
   max_size                  = 4
   desired_capacity          = 2
-  vpc_zone_identifier       = [aws_subnet.project01_private_subnet[*].id]
+  count                     = length(aws_subnet.project01_private_subnet)
+  vpc_zone_identifier       = aws_subnet.project01_private_subnet[count.index].id
 
   tag {
     key                      = "Name"
