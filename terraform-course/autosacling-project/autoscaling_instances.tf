@@ -21,8 +21,9 @@ block_device_mappings {
     }
   }
   dynamic "network_interfaces" {
+    for_each = aws_subnet.project01_private_subnet
     content {
-      device_index         = 0
+      device_index         = count.index
       subnet_id            = aws_subnet.project01_private_subnet.id
       security_groups      = [aws_security_group.project01_private_secgroup01.id]
     }
