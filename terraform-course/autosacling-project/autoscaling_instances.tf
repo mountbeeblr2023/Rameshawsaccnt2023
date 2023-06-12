@@ -25,6 +25,7 @@ block_device_mappings {
     content {
       # device_index         = network_interfaces.key
       device_index         = 1
+      network_card_index   = network_interfaces.key
       subnet_id            = aws_subnet.project01_private_subnet[network_interfaces.key].id
       security_groups      = [aws_security_group.project01_private_secgroup01.id]
     }
