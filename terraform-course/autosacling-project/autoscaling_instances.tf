@@ -17,18 +17,20 @@ resource "aws_launch_template" "project01_launch_template" {
 
 # Create Auto Scaling Group
 resource "aws_autoscaling_group" "project01_autoscaling_group" {
-  name                      = "project01_autoscaling_group"
+  name                      = "project01-asg"
   launch_template {
-    id      = aws_launch_template.project01_launch_template.id
-    version = "$Latest"
+    id                       = aws_launch_template.project01_launch_template.id
+    version                  = "$Latest"
   }
-  min_size                  = 2
-  max_size                  = 5
+
+  min_size                  = 1
+  max_size                  = 4
   desired_capacity          = 2
-  health_check_type         = "ELB"
-  health_check_grace_period = 300
-  count                     = length(aws_subnet.project01_private_subnet)
-  vpc_zone_identifier       = aws_subnet.project01_private_subnet[count.index].id
-  target_group_arns         = [aws_lb_target_group.blr-alb-target-group.arn]
-  termination_policies      = ["Default"]
+  vpc_zone_identifier       = [aws_subnet.project01_private_subnet[*].id]
+
+  tag {
+    key                      = "Name"
+    value                    = "project01-asg"
+    propagate_at_launch     = true
+  }
 }
