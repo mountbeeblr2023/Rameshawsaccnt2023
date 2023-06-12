@@ -21,12 +21,11 @@ block_device_mappings {
     }
   }
   dynamic "network_interfaces" {
-    for_each = aws_subnet.project01_private_subnet
+    for_each = range(length(aws_subnet.project01_private_subnet))
     content {
-      device_index           = each.key
-      network_card_index     = each.key
-      subnet_id              = each.value.id
-      security_groups        = [aws_security_group.project01_private_secgroup01.id]
+      device_index         = network_interfaces.key
+      subnet_id            = aws_subnet.project01_private_subnet[count.index].id
+      security_groups      = [aws_security_group.project01_private_secgroup01.id]
     }
   }
 }
