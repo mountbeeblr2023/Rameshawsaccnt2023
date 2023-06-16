@@ -45,11 +45,11 @@ resource "aws_subnet" "project01_private_subnet" {
   }
 }
 
- ######### Associate the IGW to Public Route Table ############
- resource "aws_route_table_association" "project01-IGW_association" {
-   route_table_id         = aws_route_table.project01_public_route_table.id
-   gateway_id             = aws_internet_gateway.project01-IGW.id
-}
+#  ######### Associate the IGW to Public Route Table ############
+#  resource "aws_route_table_association" "project01-IGW_association" {
+#    route_table_id         = aws_route_table.project01_public_route_table.id
+#    gateway_id             = aws_internet_gateway.project01-IGW.id
+# }
 
 ####### Create private route table for subnets #######
 resource "aws_route_table" "project01_private_route_table" {
@@ -64,7 +64,7 @@ resource "aws_route_table" "project01_public_route_table" {
   vpc_id = aws_vpc.project01_vpc.id
   route {
     cidr_block = var.dest_cidr_block
-    gateway_id = aws_internet_gateway.my_igw.id
+    gateway_id = aws_internet_gateway.project01-IGW.id
   }
   tags = {
     Name = "project01_public_route_table"
