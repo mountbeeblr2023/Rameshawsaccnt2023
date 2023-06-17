@@ -1,6 +1,6 @@
 module "vpc" {
   source           = "./vpcmodule"
-  cidr_block       = var.vpc_cidr_block
+  cidr_block       = var.vpc_cidr
   instance_tenancy = "default"
   name             = "MyVPC"
 }
@@ -8,9 +8,9 @@ module "vpc" {
 module "public_subnet" {
   source                    = "./subnetmodule/subpublic"
   vpc_id                    = module.vpc.vpc_id
-  count                     = length(var.public_subnet_cidr_blocks)
-  cidr_block                = var.public_subnet_cidr_blocks
-  availability_zone         = var.availability_zones
+  count                     = length(var.public_subnet_cidr)
+  cidr_block                = var.public_subnet_cidr
+  availability_zone         = var.availability
   name                      = "Public Subnet"
   public_route_table_id     = module.public_route_table.route_table_id
 }
@@ -18,9 +18,9 @@ module "public_subnet" {
 module "private_subnet" {
   source                    = "./subnetmodule/subprivate"
   vpc_id                    = module.vpc.vpc_id
-  count                     = length(var.private_subnet_cidr_blocks)
-  cidr_block                = var.private_subnet_cidr_blocks
-  availability_zone         = var.availability_zones
+  count                     = length(var.private_subnet_cidr)
+  cidr_block                = var.private_subnet_cidr
+  availability_zone         = var.availability
   name                      = "Private Subnet"
   private_route_table_id    = module.private_route_table.route_table_id
 }
