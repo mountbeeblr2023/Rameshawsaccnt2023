@@ -1,3 +1,3 @@
-module "vpc-config" {
-    source = "./modules"   
+module "project01-config" {
+    source = "./modules/*"   
 }
