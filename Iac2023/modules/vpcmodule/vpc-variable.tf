@@ -1,27 +1,22 @@
 
-#### Instance ami and instance type varible #######
-variable "ami_id" {
-  type = string
-  default         = "ami-04a0ae173da5807d3"
-}
-variable instance_type {
-  type        = string
-  default     = "t2.micro"
-}
+ #### Instance ami and instance type varible #######
+ variable "ami_id" {
+   type = string
+   default         = "ami-04a0ae173da5807d3"
+ }
+ variable instance_type {
+   type        = string
+   default     = "t2.micro"
+ }
 
-####### Instance key pair to access the server ssh #####
-variable existing_key_pair {
-  type        = string
-  default     = "terraformkey2023"
-  description = "existing key pair in aws console"
-}
+ ####### Instance key pair to access the server ssh #####
+ variable existing_key_pair {
+   type        = string
+   default     = "terraformkey2023"
+   description = "existing key pair in aws console"
+ }
 
-###### common destination block ipaddr ######
-variable dest_cidr_block {
-  type        = string
-  default     = "0.0.0.0/0"
-  description = "description"
-}
+
 
 #### VPC Variables ####
 variable blr_vpc {
@@ -40,6 +35,13 @@ variable blr_public_subnet {
   type        = list
   default     = ["10.16.0.32/28", "10.16.0.64/28"]
   description = "blr_public_subnet"
+}
+
+###### IGW destination block ipaddr ######
+variable dest_cidr_block {
+  type        = string
+  default     = "0.0.0.0/0"
+  description = "description"
 }
 
 ####### AZ Varaible for both private & public subnet ########
