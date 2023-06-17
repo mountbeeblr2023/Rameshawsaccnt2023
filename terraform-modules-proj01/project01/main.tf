@@ -17,7 +17,7 @@ module "public_subnet" {
 module "private_subnet" {
   source                    = "./subnetmodule/subprivate"
   vpc_id                    = module.vpc.vpc_id
-  cidr_block                = "10.0.1.16/24"
+  cidr_block                = "10.0.2.0/24"
   availability_zone         = "us-east-1b"
   name                      = "Private Subnet"
   private_route_table_id    = module.private_route_table.route_table_id
