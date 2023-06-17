@@ -1,12 +1,12 @@
 module "vpc" {
-  source          = "./modules/vpcmodule"
+  source          = "./vpcmodule"
   cidr_block      = "10.0.0.0/16"
   instance_tenancy = "default"
   name            = "MyVPC"
 }
 
 module "public_subnet" {
-  source                    = "./modules/subnetmodule/subpublic"
+  source                    = "./subnetmodule/subpublic"
   vpc_id                    = module.vpc.vpc_id
   cidr_block                = "10.0.1.0/24"
   availability_zone         = "us-east-1a"
@@ -15,7 +15,7 @@ module "public_subnet" {
 }
 
 module "private_subnet" {
-  source                    = "./modules/subnetmodule/subprivate"
+  source                    = "./subnetmodule/subprivate"
   vpc_id                    = module.vpc.vpc_id
   cidr_block                = "10.0.2.0/24"
   availability_zone         = "us-east-1b"
@@ -24,20 +24,20 @@ module "private_subnet" {
 }
 
 module "public_route_table" {
-  source        = "./modules/routetablemodule/routepublic"
+  source        = "./routetablemodule/routepublic"
   vpc_id        = module.vpc.vpc_id
   gateway_id    = module.igw.igw_id
   name          = "Public Route Table"
 }
 
 module "private_route_table" {
-  source        = "./modules/routetablemodule/routeprivate"
+  source        = "./routetablemodule/routeprivate"
   vpc_id        = module.vpc.vpc_id
   name          = "Private Route Table"
 }
 
 module "igw" {
-  source        = "./modules/igwmodule"
+  source        = "./igwmodule"
   vpc_id        = module.vpc.vpc_id
   name          = "MyIGW"
 }
