@@ -1,3 +1,9 @@
-module "project01-config" {
-    source = "./modules/*"   
+module "ec2-config" {
+    source = "./modules/ec2resource"   
+}
+module "secgroup-config" {
+    source = "./modules/securitygroups"
+}
+module "vpc-config" {
+    source = "./modules/vpcmodule"
 }
