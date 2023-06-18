@@ -8,6 +8,4 @@ resource "aws_subnet" "subnets" {
   }
 }
 
-output "subnet_ids" {
-  value = aws_subnet.subnets[*].id
-}
+
