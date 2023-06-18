@@ -8,20 +8,21 @@ module "vpc" {
 module "public_subnet" {
   source                    = "./subnetmodule/subpublic"
   vpc_id                    = module.vpc.vpc_id
-  cidr_blocks               = ["10.0.1.0/24", "10.0.2.0/24"]
-  availability_zones        = ["us-east-1b", "us-east-1c"]
-  names                     = ["Public Subnet 1", "Public Subnet 2"]
+  cidr_block                = "10.0.1.0/24"
+  availability_zone         = "us-east-1b"
+  name                      = "Public Subnet"
   public_route_table_id     = module.public_route_table.route_table_id
 }
 
 module "private_subnet" {
   source                    = "./subnetmodule/subprivate"
   vpc_id                    = module.vpc.vpc_id
-  cidr_blocks               = ["10.0.3.0/24", "10.0.4.0/24"]
-  availability_zones        = ["us-east-1b", "us-east-1c"]
-  names                     = ["Private Subnet 1", "Private Subnet 2"]
+  cidr_block                = "10.0.2.0/24"
+  availability_zone         = "us-east-1b"
+  name                      = "Private Subnet"
   private_route_table_id    = module.private_route_table.route_table_id
 }
+
 module "public_route_table" {
   source        = "./routetablemodule/routepublic"
   vpc_id        = module.vpc.vpc_id
@@ -40,3 +41,15 @@ module "igw" {
   vpc_id        = module.vpc.vpc_id
   name          = "MyIGW"
 }
+
+# module "public_nacl" {
+#   source        = "./modules/nacl/public"
+#   vpc_id        = module.vpc.vpc_id
+#   name          = "Public NACL"
+# }
+
+# module "private_nacl" {
+#   source        = "./modules/nacl/private"
+#   vpc_id        = module.vpc.vpc_id
+#   name          = "Private NACL"
+# }
