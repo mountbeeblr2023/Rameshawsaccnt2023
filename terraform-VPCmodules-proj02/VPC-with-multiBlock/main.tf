@@ -6,7 +6,7 @@ module "vpc" {
 }
 
 module "subnets" {
-  source         = "./subnetmodule"
+  source         = "./subnetmodule/privatesub"
   vpc_id         = module.vpc.vpc_id
   subnet_configs = [
     {
