@@ -1,3 +1,3 @@
 output "private-subnet_ids" {
-  value = aws_subnet.subnets[*].id
+  value = aws_subnet.private_subnetes[*].id
 }
