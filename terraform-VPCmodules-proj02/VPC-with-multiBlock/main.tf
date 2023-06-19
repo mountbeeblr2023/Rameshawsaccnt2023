@@ -57,7 +57,7 @@ output "privatesubnet_ids" {
  }
 
 ############################### NACLS #########################
-module "networkaclmodule" {
+module "naclsmodule" {
   source = "./naclmodule"
 
   vpc_id = "your-vpc-id"
