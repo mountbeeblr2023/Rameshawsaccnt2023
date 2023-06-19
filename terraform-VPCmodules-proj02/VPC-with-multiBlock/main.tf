@@ -32,26 +32,26 @@ module "public_sub-01" {
   vpc_id         = module.vpc.vpc_id
   subnet_configs = [
     {
-      cidr_block        = "10.0.1.0/24"
+      cidr_block        = "10.0.4.0/24"
       availability_zone = "us-east-1e"
       name              = "publicSubnet1"
     },
     {
-      cidr_block        = "10.0.2.0/24"
+      cidr_block        = "10.0.5.0/24"
       availability_zone = "us-east-1f"
       name              = "publicSubnet2"
     },
     {
-      cidr_block        = "10.0.3.0/24"
+      cidr_block        = "10.0.6.0/24"
       availability_zone = "us-east-1d"
       name              = "publicSubnet3"
     }
   ]
 }
 
-output "privatesubnet_ids" {
-  value = module.priv_sub-01.subnet_ids
-}
-output "publicsubnet_ids" {
-  value = module.public_sub-01.subnet_ids
-}
+# output "privatesubnet_ids" {
+#   value = module.priv_sub-01.subnet_ids
+# }
+# output "publicsubnet_ids" {
+#   value = module.public_sub-01.subnet_ids
+# }
