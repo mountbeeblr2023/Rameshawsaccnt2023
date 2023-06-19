@@ -7,3 +7,7 @@ resource "aws_subnet" "public_subnet" {
     Name = var.subnet_configs[count.index].name
   }
 }
+resource "aws_route_table_association" "public_subnet_association" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = var.public_route_table_id
+}
