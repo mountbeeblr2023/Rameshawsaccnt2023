@@ -57,82 +57,13 @@ output "privatesubnet_ids" {
  }
 
 ############################### NACLS #########################
-module "naclsmodule" {
+module "private_nacls" {
   source = "./naclmodule"
 
-  vpc_id = "your-vpc-id"
-  nacl_count = 2
-
-  nacls = [
-    {
-      name           = "nacl-1"
-      subnets        = module.priv_sub-01.private_subnet_ids
-      inbound_rules  = [
-        {
-          rule_number = 100
-          from_port   = 80
-          to_port     = 80
-          protocol    = "tcp"
-          rule_action = "allow"
-          cidr_block  = "0.0.0.0/0"
-        },
-        {
-          rule_number = 101
-          from_port   = 443
-          to_port     = 443
-          protocol    = "tcp"
-          rule_action = "allow"
-          cidr_block  = "0.0.0.0/0"
-        }
-      ]
-      outbound_rules = [
-        {
-          rule_number = 200
-          from_port   = 0
-          to_port     = 0
-          protocol    = "-1"
-          rule_action = "allow"
-          cidr_block  = "0.0.0.0/0"
-        }
-      ]
-    },
-    {
-      name           = "nacl-2"
-      subnets        = module.priv_sub-01.private_subnet_ids
-      inbound_rules  = [
-        {
-          rule_number = 100
-          from_port   = 22
-          to_port     = 22
-          protocol    = "tcp"
-          rule_action = "allow"
-          cidr_block  = "0.0.0.0/0"
-        },
-        {
-          rule_number = 101
-          from_port   = 3389
-          to_port     = 3389
-          protocol    = "tcp"
-          rule_action = "allow"
-          cidr_block  = "0.0.0.0/0"
-        }
-      ]
-      outbound_rules = [
-        {
-          rule_number = 200
-          from_port   = 0
-          to_port     = 0
-          protocol    = "-1"
-          rule_action = "allow"
-          cidr_block  = "0.0.0.0/0"
-        }
-      ]
-    }
-  ]
+  vpc_id = aws_vpc.main.id
 }
 
-output "nacl_ids" {
-  description = "List of IDs of the created NACL resources."
-  value       = module.naclsmodule.nacl_ids
+resource "aws_subnet_network_acl_association" "private_association" {
+  subnet_id          = module.privatesubnet_ids
+  network_acl_id     = module.private_nacls.nacl_id
 }
-
