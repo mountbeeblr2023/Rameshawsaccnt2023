@@ -49,11 +49,4 @@ module "public_sub-01" {
   ]
 }
 
-output "privatesubnet_ids" {
-    value = module.priv_sub-01.private-subnet_ids
- }
- output "publicsubnet_ids" {
-    value = module.public_sub-01.public-subnet_ids
- }
-
 
