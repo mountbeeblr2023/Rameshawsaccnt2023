@@ -56,14 +56,4 @@ output "privatesubnet_ids" {
     value = module.public_sub-01.public-subnet_ids
  }
 
-############################### NACLS #########################
-module "private_nacls" {
-  source = "./naclmodule"
 
-  vpc_id = aws_vpc.main.id
-}
-
-resource "aws_subnet_network_acl_association" "private_association" {
-  subnet_id          = module.privatesubnet_ids
-  network_acl_id     = module.private_nacls.nacl_id
-}
